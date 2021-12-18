@@ -43,5 +43,5 @@ public class Constants {
 
     public static final double CROSS_THICKNESS = 2;
     public static final Color CROSS_COLOR = Color.RED;
-    public static final double CROSS_OPACITY = 0.8;
+    //public static final double CROSS_OPACITY = 0.8;
 }

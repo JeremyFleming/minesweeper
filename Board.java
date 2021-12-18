@@ -75,9 +75,7 @@ public class Board {
     private void revealMines(){
         for(int row = 0; row < Constants.NUM_ROWS; row++) {
             for (int col = 0; col < Constants.NUM_COLS; col++) {
-                if(this.squares[row][col].isMine()){
-                    this.squares[row][col].revealMine();
-                }
+                this.squares[row][col].revealMine();
             }
         }
     }

@@ -41,8 +41,6 @@ public class BoardSquare {
         this.createMine();
         //this.createLabel();
         //this.square.setOpacity(0.4);
-        //this.square.setOnMouseEntered((MouseEvent e) -> this.square.setOpacity(Constants.HIGHLIGHT_OPACITY));
-        //this.square.setOnMouseExited((MouseEvent e) -> this.square.setOpacity(1));
     }
 
     private void setUpBoardSquare(boolean dark){
@@ -125,9 +123,13 @@ public class BoardSquare {
     }
 
     public void revealMine(){
-        if(!this.flagged){
+        if(!this.flagged && this.isMine){
             this.gamePane.getChildren().remove(this.mine);
             this.gamePane.getChildren().add(this.mine);
+        } else if (this.flagged && !this.isMine){
+            this.createCross();
+            this.gamePane.getChildren().removeAll(this.flag, this.flagPole, this.flagBase);
+            this.gamePane.getChildren().addAll(this.cross);
         }
     }
 
@@ -168,7 +170,7 @@ public class BoardSquare {
                 this.square.getY() + Constants.CROSS_THICKNESS
         );
         this.cross.setFill(Constants.CROSS_COLOR);
-        this.cross.setOpacity(Constants.CROSS_OPACITY);
+        //this.cross.setOpacity(Constants.CROSS_OPACITY);
     }
 
     public boolean isOpen(){ return this.opened; }
@@ -197,10 +199,6 @@ public class BoardSquare {
         this.gamePane.getChildren().add(this.mine);
         this.gamePane.getChildren().remove(this.square);
         this.gamePane.getChildren().add(this.square);
-        if(this.isFlagged()){
-            this.gamePane.getChildren().removeAll(this.flagPole, this.flagBase, this.flag);
-            this.gamePane.getChildren().addAll(this.flagPole, this.flagBase, this.flag);
-        }
     }
 
     public void setNumber(int number){
