@@ -13,6 +13,7 @@ public class MinesweeperGame {
     private Pane gamePane;
     private HBox infoBoard;
     private Board board;
+    private boolean gameOver;
 
     public MinesweeperGame(Pane gamePane, HBox infoBoard){
         this.gamePane = gamePane;
@@ -26,25 +27,33 @@ public class MinesweeperGame {
         this.gamePane.setOnMouseClicked((MouseEvent e) -> this.handleMouseClick(e));
         this.gamePane.setOnKeyPressed((KeyEvent) -> this.handleKeyPressed(KeyEvent));
         this.gamePane.setFocusTraversable(true);
-
+        this.gameOver = false;
     }
 
     private void handleMouseClick(MouseEvent e){
-        MouseButton click = e.getButton();
-        switch(click){
-            case PRIMARY: this.board.openBoardSquare(); break;
-            case SECONDARY: this.board.flagSquare(); break;
-            default: break;
+        if(!this.gameOver){
+            MouseButton click = e.getButton();
+            switch(click){
+                case PRIMARY: if(this.board.openBoardSquares()){
+                    this.gameOver = true;
+                }; break;
+                case SECONDARY: this.board.flagSquare(); break;
+                default: break;
+            }
         }
         e.consume();
     }
 
     private void handleKeyPressed(KeyEvent e){
-        KeyCode code = e.getCode();
-        switch(code){
-            case S: this.board.openBoardSquare(); break;
-            case F: this.board.flagSquare(); break;
-            default: break;
+        if(!this.gameOver){
+            KeyCode code = e.getCode();
+            switch(code){
+                case S: if(this.board.openBoardSquares()){
+                    this.gameOver = true;
+                }; break;
+                case F: this.board.flagSquare(); break;
+                default: break;
+            }
         }
         e.consume();
     }

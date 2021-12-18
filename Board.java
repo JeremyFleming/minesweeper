@@ -73,30 +73,47 @@ public class Board {
 
      */
 
-    public void openBoardSquare(){
+    public boolean openBoardSquares(){
         if(this.firstClick){
             this.generateBombs(this.currentHighlightedRow, this.currentHighlightedCol);
-            if(this.squares[this.currentHighlightedRow][this.currentHighlightedCol].open()){
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow - 1, currentHighlightedCol - 1);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow - 1, currentHighlightedCol);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow - 1, currentHighlightedCol + 1);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow, currentHighlightedCol - 1);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow, currentHighlightedCol + 1);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow + 1, currentHighlightedCol - 1);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow + 1, currentHighlightedCol);
-                this.openNotNullAndNotEmpty(this.currentHighlightedRow + 1, currentHighlightedCol + 1);
-            }
             this.firstClick = false;
+        }
+        if(this.squares[this.currentHighlightedRow][this.currentHighlightedCol].isMine() &&
+                !this.squares[this.currentHighlightedRow][this.currentHighlightedCol].isFlagged()){
+            this.revealMines();
+            return true;
         } else {
-            this.squares[this.currentHighlightedRow][this.currentHighlightedCol].open();
+            this.openBoardSquare(this.currentHighlightedRow, this.currentHighlightedCol);
+        }
+        return false;
+    }
+
+    private boolean openBoardSquare(int row, int col){
+        if(this.notNull(row, col) && !this.squares[row][col].isOpen() && this.squares[row][col].open()){
+            this.openBoardSquare(row - 1, col - 1);
+            this.openBoardSquare(row - 1, col);
+            this.openBoardSquare(row - 1, col + 1);
+            this.openBoardSquare(row, col - 1);
+            this.openBoardSquare(row, col + 1);
+            this.openBoardSquare(row + 1, col - 1);
+            this.openBoardSquare(row + 1, col);
+            this.openBoardSquare(row + 1, col + 1);
+        }
+        return false;
+    }
+
+    private void revealMines(){
+        for(int row = 0; row < Constants.NUM_ROWS; row++) {
+            for (int col = 0; col < Constants.NUM_COLS; col++) {
+                if(this.squares[row][col].isMine()){
+                    this.squares[row][col].revealMine();
+                }
+            }
         }
     }
 
-    private void openNotNullAndNotEmpty(int row, int col){
-        if(row > -1 && row < Constants.NUM_ROWS && col > -1 && col < Constants.NUM_COLS
-                && !this.squares[row][col].isOpen()){
-            this.squares[row][col].open();
-        }
+    private boolean notNull(int row, int col){
+        return(row > -1 && row < Constants.NUM_ROWS && col > -1 && col < Constants.NUM_COLS);
     }
 
     private void generateBombs(double safeRow, double safeCol){
@@ -134,8 +151,7 @@ public class Board {
     }
 
     private int notNullAndIsMine(int row, int col){
-        if(row > -1 && row < Constants.NUM_ROWS && col > -1 && col < Constants.NUM_COLS
-                && this.squares[row][col].isMine()){
+        if(this.notNull(row, col) && this.squares[row][col].isMine()){
             return 1;
         }
         return 0;

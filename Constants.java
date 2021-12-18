@@ -22,7 +22,7 @@ public class Constants {
     public static final Color FLAG_COLOR = Color.RED;
     public static final double FLAG_POLE_WIDTH = 4;
     public static final double FLAG_POLE_HEIGHT = 16;
-    public static final double FLAG_BASE_WIDTH = 20;
+    public static final double FLAG_BASE_WIDTH = 16;
     public static final double FLAG_BASE_HEIGHT = 4;
     public static final Color FLAG_POLE_COLOR = Color.BLACK;
 
