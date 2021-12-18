@@ -26,13 +26,6 @@ public class Board {
         this.currentHighlightedCol = -1;
         this.firstHighlight = true;
         this.firstClick = true;
-        /*
-        this.gamePane.setOnMouseMoved((MouseEvent e) -> this.highlightBoardSquare(e.getX(), e.getY()));
-        this.gamePane.setOnMouseClicked((MouseEvent e) -> this.handleMouseClick(e));
-        this.gamePane.setOnKeyPressed((KeyEvent) -> this.handleKeyPressed(KeyEvent));
-        this.gamePane.setFocusTraversable(true);
-
-         */
     }
 
     public void highlightBoardSquare(double x, double y){
@@ -49,29 +42,6 @@ public class Board {
             this.squares[this.currentHighlightedRow][this.currentHighlightedCol].highlight();
         }
     }
-
-    /*
-    private void handleMouseClick(MouseEvent e){
-        MouseButton click = e.getButton();
-        switch(click){
-            case PRIMARY: this.openBoardSquare(); break;
-            case SECONDARY: this.flagSquare(); break;
-            default: break;
-        }
-        e.consume();
-    }
-
-    private void handleKeyPressed(KeyEvent e){
-        KeyCode code = e.getCode();
-        switch(code){
-            case S: this.openBoardSquare(); break;
-            case F: this.flagSquare(); break;
-            default: break;
-        }
-        e.consume();
-    }
-
-     */
 
     public boolean openBoardSquares(){
         if(this.firstClick){
@@ -158,6 +128,6 @@ public class Board {
     }
 
     public void flagSquare(){
-        this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag();
+        this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag(!this.firstClick);
     }
 }

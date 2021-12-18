@@ -4,7 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -21,6 +20,7 @@ public class BoardSquare {
     private Polygon flag;
     private Rectangle flagPole;
     private Rectangle flagBase;
+    private Polygon cross;
     private int row;
     private int col;
     private boolean opened;
@@ -39,7 +39,7 @@ public class BoardSquare {
         this.setUpBoardSquare(dark);
         this.createFlag();
         this.createMine();
-        this.createLabel();
+        //this.createLabel();
         //this.square.setOpacity(0.4);
         //this.square.setOnMouseEntered((MouseEvent e) -> this.square.setOpacity(Constants.HIGHLIGHT_OPACITY));
         //this.square.setOnMouseExited((MouseEvent e) -> this.square.setOpacity(1));
@@ -131,18 +131,60 @@ public class BoardSquare {
         }
     }
 
+    private void createCross(){
+        this.cross = new Polygon();
+        this.cross.getPoints().addAll(
+                this.square.getX(),
+                this.square.getY(),
+                this.square.getX() + Constants.CROSS_THICKNESS,
+                this.square.getY(),
+                this.square.getX() + Constants.SQUARE_SIZE / 2,
+                this.square.getY() + Constants.SQUARE_SIZE / 2 - Constants.CROSS_THICKNESS,
+                this.square.getX() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
+                this.square.getY(),
+                this.square.getX() + Constants.SQUARE_SIZE,
+                this.square.getY(),
+                this.square.getX() + Constants.SQUARE_SIZE,
+                this.square.getY() + Constants.CROSS_THICKNESS,
+                this.square.getX() + Constants.SQUARE_SIZE / 2 + Constants.CROSS_THICKNESS,
+                this.square.getY() + Constants.SQUARE_SIZE / 2,
+                this.square.getX() + Constants.SQUARE_SIZE,
+                this.square.getY() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
+                this.square.getX() + Constants.SQUARE_SIZE,
+                this.square.getY() + Constants.SQUARE_SIZE,
+                this.square.getX() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
+                this.square.getY() + Constants.SQUARE_SIZE,
+                this.square.getX() + Constants.SQUARE_SIZE / 2,
+                this.square.getY() + Constants.SQUARE_SIZE / 2 + Constants.CROSS_THICKNESS,
+                this.square.getX() + Constants.CROSS_THICKNESS,
+                this.square.getY() + Constants.SQUARE_SIZE,
+                this.square.getX(),
+                this.square.getY() + Constants.SQUARE_SIZE,
+                this.square.getX(),
+                this.square.getY() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
+                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.CROSS_THICKNESS,
+                this.square.getY() + Constants.SQUARE_SIZE / 2,
+                this.square.getX(),
+                this.square.getY() + Constants.CROSS_THICKNESS
+        );
+        this.cross.setFill(Constants.CROSS_COLOR);
+        this.cross.setOpacity(Constants.CROSS_OPACITY);
+    }
+
     public boolean isOpen(){ return this.opened; }
 
     public boolean isFlagged(){ return this.flagged; }
 
-    public void flag(){
-        if(!this.opened){
-            if(!this.flagged){
-                this.gamePane.getChildren().addAll(this.flagBase, this.flagPole, this.flag);
-                this.flagged = true;
-            } else {
-                this.gamePane.getChildren().removeAll(this.flagBase, this.flagPole, this.flag);
-                this.flagged = false;
+    public void flag(boolean gameStarted){
+        if(gameStarted){
+            if(!this.opened){
+                if(!this.flagged){
+                    this.gamePane.getChildren().addAll(this.flagBase, this.flagPole, this.flag);
+                    this.flagged = true;
+                } else {
+                    this.gamePane.getChildren().removeAll(this.flagBase, this.flagPole, this.flag);
+                    this.flagged = false;
+                }
             }
         }
     }
@@ -155,9 +197,14 @@ public class BoardSquare {
         this.gamePane.getChildren().add(this.mine);
         this.gamePane.getChildren().remove(this.square);
         this.gamePane.getChildren().add(this.square);
+        if(this.isFlagged()){
+            this.gamePane.getChildren().removeAll(this.flagPole, this.flagBase, this.flag);
+            this.gamePane.getChildren().addAll(this.flagPole, this.flagBase, this.flag);
+        }
     }
 
     public void setNumber(int number){
+        this.createLabel();
         if(number > 0){
             this.isEmpty = false;
             this.number.setText("" + number);

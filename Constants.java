@@ -40,4 +40,8 @@ public class Constants {
     public static final Color COLOR6 = Color.DARKCYAN;
     public static final Color COLOR7 = Color.GRAY;
     public static final Color COLOR8 = Color.BLACK;
+
+    public static final double CROSS_THICKNESS = 2;
+    public static final Color CROSS_COLOR = Color.RED;
+    public static final double CROSS_OPACITY = 0.8;
 }
