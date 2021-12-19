@@ -27,6 +27,8 @@ public class BoardSquare {
     private boolean flagged;
     private boolean isMine;
     private boolean isEmpty;
+    private boolean highlighted;
+    private boolean crossed;
 
     public BoardSquare(Pane gamePane, boolean dark, int row, int col){
         this.gamePane = gamePane;
@@ -36,6 +38,8 @@ public class BoardSquare {
         this.flagged = false;
         this.isMine = false;
         this.isEmpty = true;
+        this.highlighted = false;
+        this.crossed = false;
         this.setUpBoardSquare(dark);
         this.createFlag();
         this.createMine();
@@ -108,10 +112,12 @@ public class BoardSquare {
 
     public void highlight(){
         this.gamePane.getChildren().add(this.highlightSquare);
+        this.highlighted = true;
     }
 
     public void unHighlight(){
         this.gamePane.getChildren().remove(this.highlightSquare);
+        this.highlighted = false;
     }
 
     public boolean open(){
@@ -130,6 +136,7 @@ public class BoardSquare {
             this.createCross();
             this.gamePane.getChildren().removeAll(this.flag, this.flagPole, this.flagBase);
             this.gamePane.getChildren().addAll(this.cross);
+            this.crossed = true;
         }
     }
 
@@ -220,6 +227,25 @@ public class BoardSquare {
             case 7: this.number.setTextFill(Constants.COLOR7); break;
             case 8: this.number.setTextFill(Constants.COLOR8); break;
             default: break;
+        }
+    }
+
+    public void removeGraphically(){
+        this.gamePane.getChildren().remove(this.openedSquare);
+        if(this.highlighted){
+            this.gamePane.getChildren().remove(this.highlightSquare);
+        }
+        if(this.flagged){
+            this.gamePane.getChildren().removeAll(this.flag, this.flagPole, this.flagBase);
+        }
+        if(this.isMine){
+            this.gamePane.getChildren().remove(this.mine);
+        }
+        if(!this.opened){
+            this.gamePane.getChildren().remove(this.square);
+        }
+        if(this.crossed){
+            this.gamePane.getChildren().remove(this.cross);
         }
     }
 }

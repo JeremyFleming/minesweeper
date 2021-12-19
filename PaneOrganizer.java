@@ -28,10 +28,13 @@ public class PaneOrganizer {
         statsBoard.setAlignment(Pos.CENTER);
         this.root.setTop(statsBoard);
 
+        /*
         Button quitButton = new Button("Quit");
         quitButton.setOnAction((ActionEvent e) -> System.exit(0));
         quitButton.setFocusTraversable(false);
         statsBoard.getChildren().add(quitButton);
+
+         */
         return statsBoard;
     }
 

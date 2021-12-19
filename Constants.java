@@ -31,7 +31,9 @@ public class Constants {
     public static final Color MINE_COLOR = Color.BLACK;
 
     public static final int TEXT_SIZE = 18;
-    public static final String NUMBER_BOX_COLOR = "-fx-background-color: #22222200";
+    public static final int BIGGER_TEXT_SIZE = 70;
+    public static final String NUMBER_BOX_COLOR = "-fx-background-color: #FFFFFF00";
+    public static final String LABEL_BOX_COLOR = "-fx-background-color: #FFFFFF66";
     public static final Color COLOR1 = Color.BLUE;
     public static final Color COLOR2 = Color.GREEN;
     public static final Color COLOR3 = Color.RED;
