@@ -29,11 +29,15 @@ public class BoardSquare {
     private boolean isEmpty;
     private boolean highlighted;
     private boolean crossed;
+    private double sizeMultiplier;
+    private double squareSize;
 
-    public BoardSquare(Pane gamePane, boolean dark, int row, int col){
+    public BoardSquare(Pane gamePane, boolean dark, int row, int col, double sizeMultiplier){
         this.gamePane = gamePane;
         this.row = row;
         this.col = col;
+        this.sizeMultiplier = sizeMultiplier;
+        this.squareSize = Constants.HARD_SQUARE_SIZE * sizeMultiplier;
         this.opened = false;
         this.flagged = false;
         this.isMine = false;
@@ -48,12 +52,12 @@ public class BoardSquare {
     }
 
     private void setUpBoardSquare(boolean dark){
-        this.square = new Rectangle(this.col * Constants.SQUARE_SIZE, this.row * Constants.SQUARE_SIZE,
-                Constants.SQUARE_SIZE, Constants.SQUARE_SIZE);
-        this.openedSquare = new Rectangle(this.col * Constants.SQUARE_SIZE, this.row * Constants.SQUARE_SIZE,
-                Constants.SQUARE_SIZE, Constants.SQUARE_SIZE);
-        this.highlightSquare = new Rectangle(this.col * Constants.SQUARE_SIZE, this.row * Constants.SQUARE_SIZE,
-                Constants.SQUARE_SIZE, Constants.SQUARE_SIZE);
+        this.square = new Rectangle(this.col * this.squareSize, this.row * this.squareSize,
+                this.squareSize, this.squareSize);
+        this.openedSquare = new Rectangle(this.col * this.squareSize, this.row * this.squareSize,
+                this.squareSize, this.squareSize);
+        this.highlightSquare = new Rectangle(this.col * this.squareSize, this.row * this.squareSize,
+                this.squareSize, this.squareSize);
         this.highlightSquare.setFill(Constants.HIGHLIGHT_COLOR);
         this.highlightSquare.setOpacity(Constants.HIGHLIGHT_OPACITY);
         if(dark){
@@ -68,42 +72,47 @@ public class BoardSquare {
 
     private void createFlag(){
         this.flagBase = new Rectangle(
-                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.FLAG_BASE_WIDTH / 2,
-                this.square.getY() + Constants.SQUARE_SIZE - 8,
-                Constants.FLAG_BASE_WIDTH, Constants.FLAG_BASE_HEIGHT);
+                this.square.getX() + this.squareSize / 2 - Constants.FLAG_BASE_WIDTH * this.sizeMultiplier / 2,
+                this.square.getY() + this.squareSize - 8 * this.sizeMultiplier,
+                Constants.FLAG_BASE_WIDTH * this.sizeMultiplier,
+                Constants.FLAG_BASE_HEIGHT * this.sizeMultiplier);
         this.flagBase.setFill(Constants.FLAG_POLE_COLOR);
         this.flagPole = new Rectangle(
-                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.FLAG_POLE_WIDTH / 2,
-                this.square.getY() + 10,
-                Constants.FLAG_POLE_WIDTH, Constants.FLAG_POLE_HEIGHT);
+                this.square.getX() + this.squareSize / 2 - Constants.FLAG_POLE_WIDTH * this.sizeMultiplier / 2,
+                this.square.getY() + 10 * this.sizeMultiplier,
+                Constants.FLAG_POLE_WIDTH * this.sizeMultiplier,
+                Constants.FLAG_POLE_HEIGHT * this.sizeMultiplier);
         this.flagPole.setFill(Constants.FLAG_POLE_COLOR);
         this.flag = new Polygon();
         this.flag.getPoints().addAll(
-                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.FLAG_POLE_WIDTH / 2,
-                this.square.getY() + 4.0,
-                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.FLAG_POLE_WIDTH / 2 + Constants.FLAG_WIDTH,
-                this.square.getY() + 4 + Constants.FLAG_HEIGHT / 2,
-                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.FLAG_POLE_WIDTH / 2,
-                this.square.getY() + 4 + Constants.FLAG_HEIGHT
+                this.square.getX() + this.squareSize / 2
+                        - Constants.FLAG_POLE_WIDTH * this.sizeMultiplier / 2,
+                this.square.getY() + 4.0 * this.sizeMultiplier,
+                this.square.getX() + this.squareSize / 2
+                        - Constants.FLAG_POLE_WIDTH * this.sizeMultiplier / 2
+                        + Constants.FLAG_WIDTH * this.sizeMultiplier,
+                this.square.getY() + 4 * this.sizeMultiplier + Constants.FLAG_HEIGHT * this.sizeMultiplier / 2,
+                this.square.getX() + this.squareSize / 2 - Constants.FLAG_POLE_WIDTH * this.sizeMultiplier / 2,
+                this.square.getY() + 4 * this.sizeMultiplier + Constants.FLAG_HEIGHT * this.sizeMultiplier
         );
         this.flag.setFill(Constants.FLAG_COLOR);
     }
 
     public void createMine(){
         this.mine = new Ellipse();
-        this.mine.setCenterX(this.square.getX() + Constants.SQUARE_SIZE / 2);
-        this.mine.setCenterY(this.square.getY() + Constants.SQUARE_SIZE / 2);
-        this.mine.setRadiusX(Constants.MINE_RADIUS);
-        this.mine.setRadiusY(Constants.MINE_RADIUS);
+        this.mine.setCenterX(this.square.getX() + this.squareSize / 2);
+        this.mine.setCenterY(this.square.getY() + this.squareSize / 2);
+        this.mine.setRadiusX(Constants.MINE_RADIUS * this.sizeMultiplier);
+        this.mine.setRadiusY(Constants.MINE_RADIUS * this.sizeMultiplier);
         this.mine.setFill(Constants.MINE_COLOR);
     }
 
     public void createLabel(){
         this.number = new Label("");
-        this.number.setFont(new Font(Constants.TEXT_SIZE));
+        this.number.setFont(new Font(Constants.TEXT_SIZE * this.sizeMultiplier));
         this.numberBox = new HBox();
         this.numberBox.setStyle(Constants.NUMBER_BOX_COLOR);
-        this.numberBox.setPrefSize(Constants.SQUARE_SIZE, Constants.SQUARE_SIZE);
+        this.numberBox.setPrefSize(this.squareSize, this.squareSize);
         this.numberBox.setAlignment(Pos.CENTER);
         this.numberBox.setTranslateX(this.square.getX());
         this.numberBox.setTranslateY(this.square.getY());
@@ -145,36 +154,36 @@ public class BoardSquare {
         this.cross.getPoints().addAll(
                 this.square.getX(),
                 this.square.getY(),
-                this.square.getX() + Constants.CROSS_THICKNESS,
+                this.square.getX() + Constants.CROSS_THICKNESS * this.sizeMultiplier,
                 this.square.getY(),
-                this.square.getX() + Constants.SQUARE_SIZE / 2,
-                this.square.getY() + Constants.SQUARE_SIZE / 2 - Constants.CROSS_THICKNESS,
-                this.square.getX() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
+                this.square.getX() + this.squareSize / 2,
+                this.square.getY() + this.squareSize / 2 - Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getX() + this.squareSize - Constants.CROSS_THICKNESS * this.sizeMultiplier,
                 this.square.getY(),
-                this.square.getX() + Constants.SQUARE_SIZE,
+                this.square.getX() + this.squareSize,
                 this.square.getY(),
-                this.square.getX() + Constants.SQUARE_SIZE,
-                this.square.getY() + Constants.CROSS_THICKNESS,
-                this.square.getX() + Constants.SQUARE_SIZE / 2 + Constants.CROSS_THICKNESS,
-                this.square.getY() + Constants.SQUARE_SIZE / 2,
-                this.square.getX() + Constants.SQUARE_SIZE,
-                this.square.getY() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
-                this.square.getX() + Constants.SQUARE_SIZE,
-                this.square.getY() + Constants.SQUARE_SIZE,
-                this.square.getX() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
-                this.square.getY() + Constants.SQUARE_SIZE,
-                this.square.getX() + Constants.SQUARE_SIZE / 2,
-                this.square.getY() + Constants.SQUARE_SIZE / 2 + Constants.CROSS_THICKNESS,
-                this.square.getX() + Constants.CROSS_THICKNESS,
-                this.square.getY() + Constants.SQUARE_SIZE,
+                this.square.getX() + this.squareSize,
+                this.square.getY() + Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getX() + this.squareSize / 2 + Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getY() + this.squareSize / 2,
+                this.square.getX() + this.squareSize,
+                this.square.getY() + this.squareSize - Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getX() + this.squareSize,
+                this.square.getY() + this.squareSize,
+                this.square.getX() + this.squareSize - Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getY() + this.squareSize,
+                this.square.getX() + this.squareSize / 2,
+                this.square.getY() + this.squareSize / 2 + Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getX() + Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getY() + this.squareSize,
                 this.square.getX(),
-                this.square.getY() + Constants.SQUARE_SIZE,
+                this.square.getY() + this.squareSize,
                 this.square.getX(),
-                this.square.getY() + Constants.SQUARE_SIZE - Constants.CROSS_THICKNESS,
-                this.square.getX() + Constants.SQUARE_SIZE / 2 - Constants.CROSS_THICKNESS,
-                this.square.getY() + Constants.SQUARE_SIZE / 2,
+                this.square.getY() + this.squareSize - Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getX() + this.squareSize / 2 - Constants.CROSS_THICKNESS * this.sizeMultiplier,
+                this.square.getY() + this.squareSize / 2,
                 this.square.getX(),
-                this.square.getY() + Constants.CROSS_THICKNESS
+                this.square.getY() + Constants.CROSS_THICKNESS * this.sizeMultiplier
         );
         this.cross.setFill(Constants.CROSS_COLOR);
         //this.cross.setOpacity(Constants.CROSS_OPACITY);
@@ -184,18 +193,19 @@ public class BoardSquare {
 
     public boolean isFlagged(){ return this.flagged; }
 
-    public void flag(boolean gameStarted){
-        if(gameStarted){
-            if(!this.opened){
-                if(!this.flagged){
-                    this.gamePane.getChildren().addAll(this.flagBase, this.flagPole, this.flag);
-                    this.flagged = true;
-                } else {
-                    this.gamePane.getChildren().removeAll(this.flagBase, this.flagPole, this.flag);
-                    this.flagged = false;
-                }
+    public boolean flag(){
+        if(!this.opened){
+            if(!this.flagged){
+                this.gamePane.getChildren().addAll(this.flagBase, this.flagPole, this.flag);
+                this.flagged = true;
+                return true;
+            } else {
+                this.gamePane.getChildren().removeAll(this.flagBase, this.flagPole, this.flag);
+                this.flagged = false;
+                return false;
             }
         }
+        return false;
     }
 
     public boolean isMine(){ return this.isMine; }
@@ -246,6 +256,9 @@ public class BoardSquare {
         }
         if(this.crossed){
             this.gamePane.getChildren().remove(this.cross);
+        }
+        if(!this.isEmpty && !this.isMine){
+            this.gamePane.getChildren().removeAll(this.number, this.numberBox);
         }
     }
 

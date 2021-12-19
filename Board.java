@@ -1,52 +1,52 @@
 package minesweeper;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 public class Board {
     private Pane gamePane;
+    private Difficulty difficulty;
     private BoardSquare[][] squares;
     private int currentHighlightedRow;
     private int currentHighlightedCol;
     private boolean firstHighlight;
-    private boolean firstClick;
+    //private boolean firstClick;
 
-    public Board(Pane gamePane){
+    public Board(Pane gamePane, Difficulty difficulty){
         this.gamePane = gamePane;
-        this.squares = new BoardSquare[Constants.NUM_ROWS][Constants.NUM_COLS];
-        for(int row = 0; row < Constants.NUM_ROWS; row++){
-            for(int col = 0; col < Constants.NUM_COLS; col++){
-                this.squares[row][col] = new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col);
+        this.difficulty = difficulty;
+        this.squares = new BoardSquare[this.difficulty.getRows()][this.difficulty.getCols()];
+        double sizeMultiplier = this.difficulty.getSquareSize() / Constants.HARD_SQUARE_SIZE;
+        for(int row = 0; row < this.difficulty.getRows(); row++){
+            for(int col = 0; col < this.difficulty.getCols(); col++){
+                this.squares[row][col] =
+                        new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col, sizeMultiplier);
             }
         }
         this.currentHighlightedRow = -1;
         this.currentHighlightedCol = -1;
         this.firstHighlight = true;
-        this.firstClick = true;
+        //this.firstClick = true;
     }
 
     public void highlightBoardSquare(double x, double y){
         if(this.firstHighlight){
-            this.currentHighlightedRow = (int) y / Constants.SQUARE_SIZE;
-            this.currentHighlightedCol = (int) x / Constants.SQUARE_SIZE;
+            this.currentHighlightedRow = (int) y / (int) this.difficulty.getSquareSize();
+            this.currentHighlightedCol = (int) x / (int) this.difficulty.getSquareSize();
             this.squares[this.currentHighlightedRow][this.currentHighlightedCol].highlight();
             this.firstHighlight = false;
-        } else if ((int) (y / Constants.SQUARE_SIZE) != this.currentHighlightedRow
-                || (int) (x / Constants.SQUARE_SIZE) != this.currentHighlightedCol){
+        } else if ((int) (y / this.difficulty.getSquareSize()) != this.currentHighlightedRow
+                || (int) (x / this.difficulty.getSquareSize()) != this.currentHighlightedCol){
             this.squares[this.currentHighlightedRow][this.currentHighlightedCol].unHighlight();
-            this.currentHighlightedRow = (int) y / Constants.SQUARE_SIZE;
-            this.currentHighlightedCol = (int) x / Constants.SQUARE_SIZE;
+            this.currentHighlightedRow = (int) y / (int) this.difficulty.getSquareSize();
+            this.currentHighlightedCol = (int) x / (int) this.difficulty.getSquareSize();
             this.squares[this.currentHighlightedRow][this.currentHighlightedCol].highlight();
         }
     }
 
-    public int openBoardSquares(){
-        if(this.firstClick){
+    public int openBoardSquares(boolean firstClick){
+        if(firstClick){
             this.generateBombs(this.currentHighlightedRow, this.currentHighlightedCol);
-            this.firstClick = false;
+            //this.firstClick = false;
         }
         if(this.squares[this.currentHighlightedRow][this.currentHighlightedCol].isMine() &&
                 !this.squares[this.currentHighlightedRow][this.currentHighlightedCol].isFlagged()){
@@ -75,8 +75,8 @@ public class Board {
     }
 
     private boolean allSquaresCleared(){
-        for(int row = 0; row < Constants.NUM_ROWS; row++) {
-            for (int col = 0; col < Constants.NUM_COLS; col++) {
+        for(int row = 0; row < this.difficulty.getRows(); row++) {
+            for (int col = 0; col < this.difficulty.getCols(); col++) {
                 if(!this.squares[row][col].isMine() && !this.squares[row][col].isOpen()){
                     return false;
                 }
@@ -88,30 +88,30 @@ public class Board {
 
     private void revealMines(){
         this.eraseHighlightAllSquares();
-        for(int row = 0; row < Constants.NUM_ROWS; row++) {
-            for (int col = 0; col < Constants.NUM_COLS; col++) {
+        for(int row = 0; row < this.difficulty.getRows(); row++) {
+            for (int col = 0; col < this.difficulty.getCols(); col++) {
                 this.squares[row][col].revealMine();
             }
         }
     }
 
     private void eraseHighlightAllSquares(){
-        for(int row = 0; row < Constants.NUM_ROWS; row++) {
-            for (int col = 0; col < Constants.NUM_COLS; col++) {
+        for(int row = 0; row < this.difficulty.getRows(); row++) {
+            for (int col = 0; col < this.difficulty.getCols(); col++) {
                 this.squares[row][col].eraseHighlight();
             }
         }
     }
 
     private boolean notNull(int row, int col){
-        return(row > -1 && row < Constants.NUM_ROWS && col > -1 && col < Constants.NUM_COLS);
+        return(row > -1 && row < this.difficulty.getRows() && col > -1 && col < this.difficulty.getCols());
     }
 
     private void generateBombs(double safeRow, double safeCol){
         int mineCount = 0;
-        while (mineCount < Constants.MINE_COUNT){
-            int row = (int) (Math.random() * Constants.NUM_ROWS);
-            int col = (int) (Math.random() * Constants.NUM_COLS);
+        while (mineCount < this.difficulty.getMineCount()){
+            int row = (int) (Math.random() * this.difficulty.getRows());
+            int col = (int) (Math.random() * this.difficulty.getCols());
             boolean isSafe = row > safeRow - 3 && row < safeRow + 3 && col > safeCol - 3 && col < safeCol + 3;
             boolean isMine = this.squares[row][col].isMine();
             if(!isSafe && !isMine){
@@ -123,8 +123,8 @@ public class Board {
     }
 
     private void generateNumbers(){
-        for(int row = 0; row < Constants.NUM_ROWS; row++){
-            for(int col = 0; col < Constants.NUM_COLS; col++){
+        for(int row = 0; row < this.difficulty.getRows(); row++){
+            for(int col = 0; col < this.difficulty.getCols(); col++){
                 if(!this.squares[row][col].isMine()){
                     int mineCount = 0;
                     mineCount += this.notNullAndIsMine(row - 1, col - 1);
@@ -148,20 +148,23 @@ public class Board {
         return 0;
     }
 
-    public void flagSquare(){
-        this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag(!this.firstClick);
+    public boolean flagSquare(){
+        return this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag();
     }
 
     public void resetBoard(){
-        for(int row = 0; row < Constants.NUM_ROWS; row++) {
-            for (int col = 0; col < Constants.NUM_COLS; col++) {
+        for(int row = 0; row < this.difficulty.getRows(); row++) {
+            for (int col = 0; col < this.difficulty.getCols(); col++) {
                 this.squares[row][col].removeGraphically();
-                this.squares[row][col] = new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col);
+                this.squares[row][col] = null; //new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col);
             }
         }
+        /*
         this.currentHighlightedRow = -1;
         this.currentHighlightedCol = -1;
         this.firstHighlight = true;
         this.firstClick = true;
+
+         */
     }
 }

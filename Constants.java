@@ -3,9 +3,29 @@ package minesweeper;
 import javafx.scene.paint.Color;
 
 public class Constants {
-    public static final int NUM_ROWS = 16;
-    public static final int NUM_COLS = 30;
-    public static final int SQUARE_SIZE = 30;
+    public static final int HOME_SCREEN_WIDTH = 300;
+    public static final int HOME_SCREEN_HEIGHT = 300;
+    public static final int BUTTON_WIDTH = 80;
+    public static final int BUTTON_HEIGHT = 20;
+    public static final int BUTTON_SPACING = HOME_SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2;
+
+    public static final int EASY_NUM_ROWS = 9;
+    public static final int EASY_NUM_COLS = 9;
+    public static final double EASY_SQUARE_SIZE = 40.0;
+    public static final int EASY_MINE_COUNT = 10;
+    public static final int EASY_TEXT_SIZE = 50;
+
+    public static final int MEDIUM_NUM_ROWS = 16;
+    public static final int MEDIUM_NUM_COLS = 16;
+    public static final double MEDIUM_SQUARE_SIZE = 36.0;
+    public static final int MEDIUM_MINE_COUNT = 40;
+    public static final int MEDIUM_TEXT_SIZE = 60;
+
+    public static final int HARD_NUM_ROWS = 16;
+    public static final int HARD_NUM_COLS = 30;
+    public static final double HARD_SQUARE_SIZE = 30.0;
+    public static final int HARD_MINE_COUNT = 99;
+    public static final int HARD_TEXT_SIZE = 70;
 
     public static final int INFO_BOARD_HEIGHT = 40;
     public static final int INFO_BOARD_SPACING = 100;
@@ -26,12 +46,10 @@ public class Constants {
     public static final double FLAG_BASE_HEIGHT = 4;
     public static final Color FLAG_POLE_COLOR = Color.BLACK;
 
-    public static final int MINE_COUNT = 99;
     public static final double MINE_RADIUS = 10;
     public static final Color MINE_COLOR = Color.BLACK;
 
     public static final int TEXT_SIZE = 18;
-    public static final int BIGGER_TEXT_SIZE = 70;
     public static final String NUMBER_BOX_COLOR = "-fx-background-color: #FFFFFF00";
     public static final String LABEL_BOX_COLOR = "-fx-background-color: #FFFFFF66";
     public static final Color COLOR1 = Color.BLUE;

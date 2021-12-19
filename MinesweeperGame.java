@@ -1,6 +1,5 @@
 package minesweeper;
 
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -16,31 +15,36 @@ import javafx.scene.text.Font;
 public class MinesweeperGame {
     private Pane gamePane;
     private HBox infoBoard;
+    private Difficulty difficulty;
     private Board board;
     private boolean gameOver;
+    private boolean gameStart;
     private Label label;
     private HBox labelBox;
+    private int flagCount;
 
-    public MinesweeperGame(Pane gamePane, HBox infoBoard){
+    public MinesweeperGame(Pane gamePane, HBox infoBoard, Difficulty difficulty){
         this.gamePane = gamePane;
         this.infoBoard = infoBoard;
+        this.difficulty = difficulty;
         this.setUpGame();
         this.createLabelBox();
         this.setUpInfoBoard();
     }
 
     private void setUpGame(){
-        this.board = new Board(this.gamePane);
+        this.board = new Board(this.gamePane, this.difficulty);
         this.gamePane.setOnMouseMoved((MouseEvent e) -> this.board.highlightBoardSquare(e.getX(), e.getY()));
         this.gamePane.setOnMouseClicked((MouseEvent e) -> this.handleMouseClick(e));
         this.gamePane.setOnKeyPressed((KeyEvent) -> this.handleKeyPressed(KeyEvent));
         this.gamePane.setFocusTraversable(true);
         this.gameOver = false;
+        this.gameStart = true;
     }
 
     private void createLabelBox(){
         this.label = new Label("");
-        this.label.setFont(new Font(Constants.BIGGER_TEXT_SIZE));
+        this.label.setFont(new Font(this.difficulty.getTextSize()));
 
         this.labelBox = new HBox();
         this.labelBox.setStyle(Constants.LABEL_BOX_COLOR);
@@ -55,9 +59,9 @@ public class MinesweeperGame {
         quitButton.setFocusTraversable(false);
 
         Button restartButton = new Button("Restart");
-        restartButton.setOnAction((ActionEvent e) -> this.restart());
+        restartButton.setOnAction((ActionEvent e) -> this.restart(false));
         restartButton.setFocusTraversable(false);
-        this.infoBoard.getChildren().addAll(quitButton, restartButton);
+        this.infoBoard.getChildren().addAll(restartButton, quitButton);
     }
 
     private void handleMouseClick(MouseEvent e){
@@ -65,12 +69,14 @@ public class MinesweeperGame {
             MouseButton click = e.getButton();
             switch(click){
                 case PRIMARY:
-                    switch(this.board.openBoardSquares()){
+                    switch(this.board.openBoardSquares(this.gameStart)){
                         case 1: this.lost(); break;
                         case 2: this.win(); break;
                         default: break;
-                } break;
-                case SECONDARY: this.board.flagSquare(); break;
+                    }
+                    this.gameStart = false;
+                    break;
+                case SECONDARY: this.flag(); break;
                 default: break;
             }
         }
@@ -81,16 +87,29 @@ public class MinesweeperGame {
         if(!this.gameOver){
             KeyCode code = e.getCode();
             switch(code){
-                case S: switch(this.board.openBoardSquares()){
+                case S:
+                switch(this.board.openBoardSquares(this.gameStart)){
                     case 1: this.lost(); break;
                     case 2: this.win(); break;
                     default: break;
-                } break;
-                case F: this.board.flagSquare(); break;
+                }
+                    this.gameStart = false;
+                    break;
+                case F: this.flag(); break;
                 default: break;
             }
         }
         e.consume();
+    }
+
+    private void flag(){
+        if(!this.gameStart){
+            if(this.board.flagSquare()){
+                this.flagCount++;
+            } else {
+                this.flagCount--;
+            }
+        }
     }
 
     private void lost(){
@@ -105,10 +124,14 @@ public class MinesweeperGame {
         this.gamePane.getChildren().add(this.labelBox);
     }
 
-    private void restart(){
+    public void restart(boolean fully){
         this.gameOver = false;
+        this.gameStart = true;
         this.label.setText("");
         this.gamePane.getChildren().remove(this.labelBox);
         this.board.resetBoard();
+        if(!fully){
+            this.board = new Board(this.gamePane, this.difficulty);
+        }
     }
 }
