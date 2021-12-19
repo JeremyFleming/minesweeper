@@ -82,13 +82,23 @@ public class Board {
                 }
             }
         }
+        this.eraseHighlightAllSquares();
         return true;
     }
 
     private void revealMines(){
+        this.eraseHighlightAllSquares();
         for(int row = 0; row < Constants.NUM_ROWS; row++) {
             for (int col = 0; col < Constants.NUM_COLS; col++) {
                 this.squares[row][col].revealMine();
+            }
+        }
+    }
+
+    private void eraseHighlightAllSquares(){
+        for(int row = 0; row < Constants.NUM_ROWS; row++) {
+            for (int col = 0; col < Constants.NUM_COLS; col++) {
+                this.squares[row][col].eraseHighlight();
             }
         }
     }

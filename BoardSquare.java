@@ -248,4 +248,8 @@ public class BoardSquare {
             this.gamePane.getChildren().remove(this.cross);
         }
     }
+
+    public void eraseHighlight(){
+        this.highlightSquare.setOpacity(0);
+    }
 }
