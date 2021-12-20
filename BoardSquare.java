@@ -15,6 +15,7 @@ public class BoardSquare {
     private Rectangle openedSquare;
     private Rectangle highlightSquare;
     private Ellipse mine;
+    private int value;
     private Label number;
     private HBox numberBox;
     private Polygon flag;
@@ -44,6 +45,7 @@ public class BoardSquare {
         this.isEmpty = true;
         this.highlighted = false;
         this.crossed = false;
+        this.value = 0;
         this.setUpBoardSquare(dark);
         this.createFlag();
         this.createMine();
@@ -134,6 +136,9 @@ public class BoardSquare {
             this.gamePane.getChildren().remove(this.square);
             this.opened = true;
         }
+        if(this.flagged){
+            return false;
+        }
         return this.isEmpty;
     }
 
@@ -193,19 +198,21 @@ public class BoardSquare {
 
     public boolean isFlagged(){ return this.flagged; }
 
-    public boolean flag(){
+    public int flag(){
         if(!this.opened){
             if(!this.flagged){
                 this.gamePane.getChildren().addAll(this.flagBase, this.flagPole, this.flag);
                 this.flagged = true;
-                return true;
+                return 1;
             } else {
                 this.gamePane.getChildren().removeAll(this.flagBase, this.flagPole, this.flag);
                 this.flagged = false;
-                return false;
+                return 0;
             }
+        } else if (!this.isMine && !this.isEmpty){
+            return 2;
         }
-        return false;
+        return 0;
     }
 
     public boolean isMine(){ return this.isMine; }
@@ -220,6 +227,7 @@ public class BoardSquare {
 
     public void setNumber(int number){
         this.createLabel();
+        this.value = number;
         if(number > 0){
             this.isEmpty = false;
             this.number.setText("" + number);
@@ -260,6 +268,10 @@ public class BoardSquare {
         if(!this.isEmpty && !this.isMine){
             this.gamePane.getChildren().removeAll(this.number, this.numberBox);
         }
+    }
+
+    public boolean matchesNumber(int valueToCheck){
+        return valueToCheck == this.value;
     }
 
     public void eraseHighlight(){

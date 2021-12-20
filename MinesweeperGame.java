@@ -69,8 +69,8 @@ public class MinesweeperGame {
             MouseButton click = e.getButton();
             switch(click){
                 case PRIMARY:
-                    switch(this.board.openBoardSquares(this.gameStart)){
-                        case 1: this.lost(); break;
+                    switch(this.board.handleLeftClick(this.gameStart)){
+                        case 1: this.lose(); break;
                         case 2: this.win(); break;
                         default: break;
                     }
@@ -88,8 +88,8 @@ public class MinesweeperGame {
             KeyCode code = e.getCode();
             switch(code){
                 case S:
-                switch(this.board.openBoardSquares(this.gameStart)){
-                    case 1: this.lost(); break;
+                switch(this.board.handleLeftClick(this.gameStart)){
+                    case 1: this.lose(); break;
                     case 2: this.win(); break;
                     default: break;
                 }
@@ -104,15 +104,16 @@ public class MinesweeperGame {
 
     private void flag(){
         if(!this.gameStart){
-            if(this.board.flagSquare()){
-                this.flagCount++;
-            } else {
-                this.flagCount--;
+            switch(this.board.handleRightClick()){
+                case 1: this.flagCount++; break;
+                case 2: this.lose(); break;
+                case 3: this.win(); break;
+                default: this.flagCount--; break;
             }
         }
     }
 
-    private void lost(){
+    private void lose(){
         this.gameOver = true;
         this.label.setText("Game Over");
         this.gamePane.getChildren().add(this.labelBox);

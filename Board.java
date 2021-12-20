@@ -22,8 +22,8 @@ public class Board {
                         new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col, sizeMultiplier);
             }
         }
-        this.currentHighlightedRow = -1;
-        this.currentHighlightedCol = -1;
+        this.currentHighlightedRow = 0;
+        this.currentHighlightedCol = 0;
         this.firstHighlight = true;
         //this.firstClick = true;
     }
@@ -43,7 +43,7 @@ public class Board {
         }
     }
 
-    public int openBoardSquares(boolean firstClick){
+    public int handleLeftClick(boolean firstClick){
         if(firstClick){
             this.generateBombs(this.currentHighlightedRow, this.currentHighlightedCol);
             //this.firstClick = false;
@@ -63,6 +63,14 @@ public class Board {
 
     private void openBoardSquare(int row, int col){
         if(this.notNull(row, col) && !this.squares[row][col].isOpen() && this.squares[row][col].open()){
+            for(int r = -1; r <= 1; r++){
+                for(int c = -1; c <= 1; c++){
+                    if(!(r == 0 && c == 0)){
+                        this.openBoardSquare(row + r, col + c);
+                    }
+                }
+            }
+            /*
             this.openBoardSquare(row - 1, col - 1);
             this.openBoardSquare(row - 1, col);
             this.openBoardSquare(row - 1, col + 1);
@@ -71,6 +79,8 @@ public class Board {
             this.openBoardSquare(row + 1, col - 1);
             this.openBoardSquare(row + 1, col);
             this.openBoardSquare(row + 1, col + 1);
+
+             */
         }
     }
 
@@ -127,14 +137,13 @@ public class Board {
             for(int col = 0; col < this.difficulty.getCols(); col++){
                 if(!this.squares[row][col].isMine()){
                     int mineCount = 0;
-                    mineCount += this.notNullAndIsMine(row - 1, col - 1);
-                    mineCount += this.notNullAndIsMine(row - 1, col);
-                    mineCount += this.notNullAndIsMine(row - 1, col + 1);
-                    mineCount += this.notNullAndIsMine(row, col - 1);
-                    mineCount += this.notNullAndIsMine(row, col + 1);
-                    mineCount += this.notNullAndIsMine(row + 1, col - 1);
-                    mineCount += this.notNullAndIsMine(row + 1, col);
-                    mineCount += this.notNullAndIsMine(row + 1, col + 1);
+                    for(int r = -1; r <= 1; r++){
+                        for(int c = -1; c <= 1; c++){
+                            if(!(r == 0 && c == 0)){
+                                mineCount += this.notNullAndIsMine(row + r, col + c);
+                            }
+                        }
+                    }
                     this.squares[row][col].setNumber(mineCount);
                 }
             }
@@ -148,8 +157,60 @@ public class Board {
         return 0;
     }
 
-    public boolean flagSquare(){
-        return this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag();
+    public int handleRightClick(){
+        switch(this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag()){
+            case 1: return 1;
+            case 2: return (this.checkFlags());
+            default: return 0;
+        }
+    }
+
+    private boolean correctFlag(int row, int col){
+        if(this.notNull(row, col) && this.squares[row][col].isFlagged() && !this.squares[row][col].isMine()){
+            return false;
+        }
+        return true;
+    }
+
+    private int notNullAndIsFlag(int row, int col){
+        if(this.notNull(row, col) && this.squares[row][col].isFlagged()){
+            return 1;
+        }
+        return 0;
+    }
+
+    private int checkFlags(){
+        int flagCount = 0;
+        boolean legal = true;
+        int row = this.currentHighlightedRow;
+        int col = this.currentHighlightedCol;
+        for(int r = -1; r <= 1; r++){
+            for(int c = -1; c <= 1; c++){
+                if(!(r == 0 && c == 0)){
+                    flagCount += this.notNullAndIsFlag(row + r, col + c);
+                    if(!correctFlag(row + r, col + c)){
+                        legal = false;
+                    }
+                }
+            }
+        }
+        if(this.squares[row][col].matchesNumber(flagCount)){
+            if(!legal) {
+                this.revealMines();
+                return 2;
+            }
+            for(int r = -1; r <= 1; r++){
+                for(int c = -1; c <= 1; c++){
+                    if(!(r == 0 && c == 0)){
+                        this.openBoardSquare(row + r, col + c);
+                    }
+                }
+            }
+            if(this.allSquaresCleared()){
+                return 3;
+            }
+        }
+        return 0;
     }
 
     public void resetBoard(){
