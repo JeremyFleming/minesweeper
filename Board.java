@@ -15,11 +15,11 @@ public class Board {
         this.gamePane = gamePane;
         this.difficulty = difficulty;
         this.squares = new BoardSquare[this.difficulty.getRows()][this.difficulty.getCols()];
-        double sizeMultiplier = this.difficulty.getSquareSize() / Constants.HARD_SQUARE_SIZE;
+        //double sizeMultiplier = this.difficulty.getSquareSize() / Constants.HARD_SQUARE_SIZE;
         for(int row = 0; row < this.difficulty.getRows(); row++){
             for(int col = 0; col < this.difficulty.getCols(); col++){
                 this.squares[row][col] =
-                        new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col, sizeMultiplier);
+                        new BoardSquare(this.gamePane, (col + row) % 2 == 0, row, col, this.difficulty);
             }
         }
         this.currentHighlightedRow = 0;
@@ -160,7 +160,7 @@ public class Board {
     public int handleRightClick(){
         switch(this.squares[this.currentHighlightedRow][this.currentHighlightedCol].flag()){
             case 1: return 1;
-            case 2: return (this.checkFlags());
+            case 2: return this.checkFlags();
             default: return 0;
         }
     }

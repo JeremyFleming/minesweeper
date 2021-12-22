@@ -32,8 +32,13 @@ public class Constants {
     public static final int MEDIUM_INFO_BOARD_SPACING = 60;
     public static final int HARD_INFO_BOARD_SPACING = 130;
 
-    public static final Color DARK_COLOR = Color.FORESTGREEN;
-    public static final Color LIGHT_COLOR = Color.LIMEGREEN;
+
+    public static final Color EASY_DARK_COLOR = Color.rgb(105, 24, 180);
+    public static final Color EASY_LIGHT_COLOR = Color.BLUEVIOLET;
+    public static final Color MEDIUM_DARK_COLOR = Color.rgb(0, 102, 204);
+    public static final Color MEDIUM_LIGHT_COLOR = Color.DODGERBLUE;
+    public static final Color HARD_DARK_COLOR = Color.FORESTGREEN;
+    public static final Color HARD_LIGHT_COLOR = Color.LIMEGREEN;
     public static final Color OPENED_DARK_COLOR = Color.BURLYWOOD;
     public static final Color OPENED_LIGHT_COLOR = Color.BISQUE;
     public static final Color HIGHLIGHT_COLOR = Color.WHITE;
@@ -51,7 +56,7 @@ public class Constants {
     public static final double MINE_RADIUS = 10;
     public static final Color MINE_COLOR = Color.BLACK;
 
-    public static final int TEXT_SIZE = 18;
+    public static final int TEXT_SIZE = 20;
     public static final String NUMBER_BOX_COLOR = "-fx-background-color: #FFFFFF00";
     public static final String LABEL_BOX_COLOR = "-fx-background-color: #FFFFFF66";
     public static final Color COLOR1 = Color.BLUE;

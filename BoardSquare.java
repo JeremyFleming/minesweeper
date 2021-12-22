@@ -32,12 +32,14 @@ public class BoardSquare {
     private boolean crossed;
     private double sizeMultiplier;
     private double squareSize;
+    private Difficulty difficulty;
 
-    public BoardSquare(Pane gamePane, boolean dark, int row, int col, double sizeMultiplier){
+    public BoardSquare(Pane gamePane, boolean dark, int row, int col, Difficulty difficulty){
         this.gamePane = gamePane;
         this.row = row;
         this.col = col;
-        this.sizeMultiplier = sizeMultiplier;
+        this.difficulty = difficulty;
+        this.sizeMultiplier = this.difficulty.getSquareSize() / Constants.HARD_SQUARE_SIZE;
         this.squareSize = Constants.HARD_SQUARE_SIZE * sizeMultiplier;
         this.opened = false;
         this.flagged = false;
@@ -63,10 +65,10 @@ public class BoardSquare {
         this.highlightSquare.setFill(Constants.HIGHLIGHT_COLOR);
         this.highlightSquare.setOpacity(Constants.HIGHLIGHT_OPACITY);
         if(dark){
-            this.square.setFill(Constants.DARK_COLOR);
+            this.square.setFill(this.difficulty.getDarkColor());
             this.openedSquare.setFill(Constants.OPENED_DARK_COLOR);
         } else {
-            this.square.setFill(Constants.LIGHT_COLOR);
+            this.square.setFill(this.difficulty.getLightColor());
             this.openedSquare.setFill(Constants.OPENED_LIGHT_COLOR);
         }
         this.gamePane.getChildren().addAll(this.openedSquare, this.square);

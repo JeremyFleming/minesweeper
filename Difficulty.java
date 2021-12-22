@@ -1,5 +1,7 @@
 package minesweeper;
 
+import javafx.scene.paint.Color;
+
 public enum Difficulty {
     EASY, MEDIUM, HARD;
 
@@ -54,6 +56,24 @@ public enum Difficulty {
             case MEDIUM: return Constants.MEDIUM_INFO_BOARD_SPACING;
             case HARD: return Constants.HARD_INFO_BOARD_SPACING;
             default: return 0;
+        }
+    }
+
+    public Color getDarkColor(){
+        switch(this){
+            case EASY: return Constants.EASY_DARK_COLOR;
+            case MEDIUM: return Constants.MEDIUM_DARK_COLOR;
+            case HARD: return Constants.HARD_DARK_COLOR;
+            default: return null;
+        }
+    }
+
+    public Color getLightColor(){
+        switch(this){
+            case EASY: return Constants.EASY_LIGHT_COLOR;
+            case MEDIUM: return Constants.MEDIUM_LIGHT_COLOR;
+            case HARD: return Constants.HARD_LIGHT_COLOR;
+            default: return null;
         }
     }
 }
