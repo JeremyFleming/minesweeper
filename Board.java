@@ -210,7 +210,7 @@ public class Board {
                 return 3;
             }
         }
-        return 0;
+        return 4;
     }
 
     public void resetBoard(){

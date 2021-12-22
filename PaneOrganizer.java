@@ -41,9 +41,9 @@ public class PaneOrganizer {
         this.home.setPrefSize(Constants.HOME_SCREEN_WIDTH, Constants.HOME_SCREEN_HEIGHT);
         this.home.setAlignment(Pos.CENTER);
 
-        Button easy = new Button("Easy");
-        Button medium = new Button("Medium");
-        Button hard = new Button("Hard");
+        Button easy = new Button("Beginner");
+        Button medium = new Button("Intermediate");
+        Button hard = new Button("Expert");
 
         easy.setPrefSize(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
         medium.setPrefSize(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
@@ -77,7 +77,7 @@ public class PaneOrganizer {
         HBox statsBoard = new HBox();
         statsBoard.setPrefSize(this.difficulty.getCols() * this.difficulty.getSquareSize(),
                 Constants.INFO_BOARD_HEIGHT);
-        statsBoard.setSpacing(Constants.INFO_BOARD_SPACING);
+        statsBoard.setSpacing(this.difficulty.getInfoBoardSpacing());
         statsBoard.setAlignment(Pos.CENTER);
         this.root.setTop(statsBoard);
 

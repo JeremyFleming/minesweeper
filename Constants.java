@@ -5,13 +5,13 @@ import javafx.scene.paint.Color;
 public class Constants {
     public static final int HOME_SCREEN_WIDTH = 300;
     public static final int HOME_SCREEN_HEIGHT = 300;
-    public static final int BUTTON_WIDTH = 80;
+    public static final int BUTTON_WIDTH = 100;
     public static final int BUTTON_HEIGHT = 20;
     public static final int BUTTON_SPACING = HOME_SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2;
 
     public static final int EASY_NUM_ROWS = 9;
     public static final int EASY_NUM_COLS = 9;
-    public static final double EASY_SQUARE_SIZE = 40.0;
+    public static final double EASY_SQUARE_SIZE = 46.0;
     public static final int EASY_MINE_COUNT = 10;
     public static final int EASY_TEXT_SIZE = 50;
 
@@ -28,7 +28,9 @@ public class Constants {
     public static final int HARD_TEXT_SIZE = 70;
 
     public static final int INFO_BOARD_HEIGHT = 40;
-    public static final int INFO_BOARD_SPACING = 100;
+    public static final int EASY_INFO_BOARD_SPACING = 25;
+    public static final int MEDIUM_INFO_BOARD_SPACING = 60;
+    public static final int HARD_INFO_BOARD_SPACING = 130;
 
     public static final Color DARK_COLOR = Color.FORESTGREEN;
     public static final Color LIGHT_COLOR = Color.LIMEGREEN;
@@ -64,4 +66,6 @@ public class Constants {
     public static final double CROSS_THICKNESS = 2;
     public static final Color CROSS_COLOR = Color.RED;
     //public static final double CROSS_OPACITY = 0.8;
+
+    public static final int FLAG_BOX_SPACING = 5;
 }

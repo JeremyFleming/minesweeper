@@ -47,4 +47,13 @@ public enum Difficulty {
             default: return 0;
         }
     }
+
+    public int getInfoBoardSpacing(){
+        switch(this){
+            case EASY: return Constants.EASY_INFO_BOARD_SPACING;
+            case MEDIUM: return Constants.MEDIUM_INFO_BOARD_SPACING;
+            case HARD: return Constants.HARD_INFO_BOARD_SPACING;
+            default: return 0;
+        }
+    }
 }
